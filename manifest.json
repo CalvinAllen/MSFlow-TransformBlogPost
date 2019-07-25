@@ -1,0 +1,22 @@
+{
+  "schema": "1.0",
+  "details": {
+    "displayName": "Transform Blog Post",
+    "description": "",
+    "createdTime": "2019-07-25T21:09:52.3469762Z",
+    "packageTelemetryId": "382cd2ab-6682-4832-b493-fd7fbfd6d494",
+    "creator": "Calvin Allen",
+    "sourceEnvironment": ""
+  },
+  "resources": {
+    "11f465c9-51e6-4606-a795-7b0ef2b1379b": {
+      "type": "Microsoft.Flow/flows",
+      "suggestedCreationType": "New",
+      "creationType": "Existing, New, Update",
+      "details": { "displayName": "Transform Blog Post" },
+      "configurableBy": "User",
+      "hierarchy": "Root",
+      "dependsOn": []
+    }
+  }
+}

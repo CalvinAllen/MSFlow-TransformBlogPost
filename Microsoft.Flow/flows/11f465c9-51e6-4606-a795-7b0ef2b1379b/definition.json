@@ -1,0 +1,98 @@
+{
+  "name": "10ee9856-1d91-4dd8-b7ef-c3ddaccfdd25",
+  "id": "/providers/Microsoft.Flow/flows/10ee9856-1d91-4dd8-b7ef-c3ddaccfdd25",
+  "type": "Microsoft.Flow/flows",
+  "properties": {
+    "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+    "displayName": "Transform Blog Post",
+    "definition": {
+      "metadata": {
+        "workflowEntityId": null,
+        "creator": {
+          "id": "275d6c0c-ffb6-489d-86bb-46c6503ef26a",
+          "type": "User",
+          "tenantId": "6e23105c-65fe-4fb7-b6e1-20a39f3cbd67"
+        },
+        "provisioningMethod": "FromDefinition",
+        "failureAlertSubscription": true,
+        "clientLastModifiedTime": "2019-07-20T22:22:50.9722106Z"
+      },
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": { "defaultValue": {}, "type": "SecureObject" }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "title": { "type": "string" },
+                "primaryLink": { "type": "string" },
+                "links": { "type": "array", "items": { "type": "string" } },
+                "updatedOn": { "type": "string" },
+                "publishDate": { "type": "string" },
+                "summary": { "type": "string" },
+                "copyright": { "type": "string" },
+                "categories": { "type": "array", "items": { "type": "string" } }
+              }
+            },
+            "method": "POST"
+          }
+        }
+      },
+      "actions": {
+        "GetHashTags": {
+          "runAfter": {},
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "",
+            "headers": { "Content-Type": "application/json" },
+            "body": "@triggerBody()"
+          }
+        },
+        "GetShortUrl": {
+          "runAfter": { "GetHashTags": ["Succeeded"] },
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "",
+            "headers": { "Content-Type": "application/json" },
+            "body": { "destination": "@{triggerBody()?['primaryLink']}" }
+          }
+        },
+        "Response": {
+          "runAfter": { "GetShortUrl": ["Succeeded"] },
+          "type": "Response",
+          "kind": "Http",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "shortUrl": "@{body('GetShortUrl')}",
+              "hashTags": "@{body('GetHashTags')}",
+              "title": "@{triggerBody()?['title']}",
+              "summary": "@{triggerBody()?['summary']}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "shortUrl": { "type": "string" },
+                "hashTags": { "type": "string" },
+                "title": { "type": "string" },
+                "summary": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "connectionReferences": {},
+    "flowFailureAlertSubscribed": false
+  }
+}
